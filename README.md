@@ -21,7 +21,7 @@ Toate aceste secțiuni sunt publice, pentru ca activitatea și progresul echipei
 
 * [Condruz Filip Gabriel] — [CondruzFilipGabriel]
 
-* [Filippos ...] - [GitHub username]
+* [Schilizzi Filippos] - [filippos855]
 
 * [Stăncioiu Adrian Florian] — [GitHub username]
 
