@@ -23,7 +23,7 @@ Toate aceste secțiuni sunt publice, pentru ca activitatea și progresul echipei
 
 * [Schilizzi Filippos] - [filippos855]
 
-* [Stăncioiu Adrian Florian] — [GitHub username]
+* [Stăncioiu Adrian Florian] — [adi4pk]
 
 * [Petcu Andreea Elena] — [AAAMON]
 
