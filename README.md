@@ -25,9 +25,9 @@ Toate aceste secțiuni sunt publice, pentru ca activitatea și progresul echipei
 
 * [Stăncioiu Adrian Florian] — [GitHub username]
 
-* [Petcu Andreea Elena] — [GitHub username]
+* [Petcu Andreea Elena] — [AAAMON]
 
-* [Iorga Iustin Nicolae] — [GitHub username]
+* [Iorga Iustin Nicolae] — [Uniror]
 
 *Documentație și rulare*
 
