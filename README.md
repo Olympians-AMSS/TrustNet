@@ -36,3 +36,5 @@ Instrucțiunile de instalare, compilare, rulare și testare vor fi completate pe
 Istoricul dezvoltării
 
 Evoluția proiectului poate fi urmărită prin istoricul commit-urilor, Issues, Discussions și Pull Requests, astfel încât atât contribuțiile individuale, cât și deciziile tehnice să fie transparente.
+
+Ideea de pornire: https://olympians-amss.github.io/TrustNet/TrustNet.html
