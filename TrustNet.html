@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ro">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   TrustNet · Specificație și idei de proiectare
+  </title>
+  <style>
+   :root {
+    color-scheme: dark;
+    --bg: #0a1020;
+    --panel: #151e31;
+    --line: #34425a;
+    --fg: #edf3ff;
+    --muted: #b1bfd2;
+    --accent: #85baff;
+    --mint: #7dd9bc;
+    --amber: #f4c47b;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.55 system-ui, sans-serif; }
+main { max-width: 1000px; margin: auto; padding: 28px 18px 70px; }
+header { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+a { color: var(--accent); }
+.tag { font-size: 12px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+h1 { font-size: clamp(28px, 5vw, 42px); margin: 14px 0 6px; line-height: 1.14; }
+h2 { font-size: clamp(21px, 3vw, 28px); margin: 34px 0 10px; }
+h3 { margin: 0 0 9px; font-size: 17px; }
+p { margin: 8px 0; color: var(--muted); }
+strong { color: var(--fg); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 15px; padding: 20px; margin: 14px 0; }
+.twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.flow { display: flex; align-items: stretch; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 18px 0; }
+.node { border: 1px solid #526785; border-radius: 10px; padding: 14px 12px; min-width: 160px; flex: 1; text-align: center; background: #1c2940; }
+.node b { display: block; font-size: 14px; }
+.node small { display: block; color: var(--muted); font-size: 12px; margin-top: 5px; }
+.arr { align-self: center; font-size: 25px; color: var(--mint); }
+.section-marker { border-left: 4px solid var(--mint); padding-left: 12px; }
+.idea { border-left-color: var(--amber); }
+ul { padding-left: 20px; margin: 8px 0; }
+li { margin: 6px 0; }
+.mini { font-size: 13px; }
+.decision { border-top: 1px solid var(--line); padding: 13px 0; }
+.decision:first-child { border-top: 0; }
+.decision b { display: block; }
+.decision small { color: var(--muted); }
+.choice { color: var(--amber); }
+.control { margin: 12px 0; }
+.control label { display: flex; justify-content: space-between; gap: 10px; color: var(--fg); }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin-top: 7px; }
+.result { display: flex; gap: 14px; flex-wrap: wrap; }
+.stat { flex: 1; background: #23314a; border-radius: 10px; padding: 12px; min-width: 120px; }
+.stat strong { display: block; font-size: 24px; }
+.stat small { color: var(--muted); }
+svg { width: 100%; height: auto; }
+.sub { color: var(--muted); font-size: 12px; }
+.eyebrow { margin-top: 28px; color: var(--mint); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.sep { height: 1px; background: var(--line); margin-top: 34px; }
+.formula-note { display: inline-block; margin-left: 10px; color: var(--accent); font-size: .60em; font-weight: 500; white-space: nowrap; vertical-align: middle; }
+
+/* Tab-urile înlocuiesc butoanele radio vizual mici. */
+.model-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 15px 0; }
+.model-tab { position: relative; cursor: pointer; border: 1px solid #536580; color: var(--muted); background: #10192a; border-radius: 10px; padding: 11px 17px; font-weight: 650; transition: background .15s, color .15s, border-color .15s; }
+.model-tab:has(input:checked) { background: #285080; border-color: var(--accent); color: #fff; box-shadow: inset 0 -3px 0 var(--accent); }
+.model-tab:focus-within { outline: 2px solid var(--mint); outline-offset: 3px; }
+.model-radio { position: absolute; opacity: 0; width: 1px; height: 1px; }
+
+@media (max-width: 700px) {
+    .twocol { grid-template-columns: 1fr; }
+    .arr { transform: rotate(90deg); }
+    .flow { flex-direction: column; }
+    .node { min-width: 0; }
+    main { padding: 18px 12px 45px; }
+    .panel { padding: 15px; }
+    .formula-note { display: block; margin: 4px 0 0; }
+}
+  </style>
+ </head>
+ <body>
+  <main>
+   <header>
+    <span class="tag">
+     Olympians · AMSS · TrustNet
+    </span>
+    <a href="https://github.com/Olympians-AMSS/TrustNet" rel="noopener" target="_blank">
+     Repository GitHub ↗
+    </a>
+   </header>
+   <h1>
+    TrustNet
+   </h1>
+   <div class="eyebrow">
+    01 · Specificație — ce vrem să facă sistemul
+   </div>
+   <h2 class="section-marker">
+    Integrare ca serviciu extern
+   </h2>
+   <p>
+    <strong>
+     TrustNet este un serviciu separat, accesat de alte site-uri.
+    </strong>
+    Actorii își creează propriile conturi și credențiale în TrustNet. O platformă externă le poate oferi opțiunea de a folosi TrustNet pentru evaluările asociate colaborării.
+   </p>
+   <div class="panel">
+    <div aria-label="Flux integrare" class="flow">
+     <div class="node">
+      <b>
+       Platformă externă
+      </b>
+      <small>
+       Oferă contract + opțiune TrustNet
+      </small>
+     </div>
+     <span class="arr">
+      →
+     </span>
+     <div class="node">
+      <b>
+       Participanți
+      </b>
+      <small>
+       Acceptă participarea; se autentifică în TrustNet
+      </small>
+     </div>
+     <span class="arr">
+      →
+     </span>
+     <div class="node">
+      <b>
+       TrustNet
+      </b>
+      <small>
+       Înregistrează acordul eligibil, apoi permite evaluări
+      </small>
+     </div>
+    </div>
+    <p class="sub">
+     Platforma transmite minimul necesar: referința acordului, identitățile legate de conturi și competențele/domeniile eligibile — nu textul contractului. Integrarea și autentificarea sunt mecanisme separate.
+    </p>
+   </div>
+   <div class="twocol">
+    <div class="panel">
+     <h3>
+      Ce reține TrustNet
+     </h3>
+     <ul>
+      <li>
+       Actori și identități proprii
+      </li>
+      <li>
+       Acorduri confirmate și participanți eligibili
+      </li>
+      <li>
+       Competențe sau domenii din acord
+      </li>
+      <li>
+       Evaluări între actori și istoricul lor
+      </li>
+     </ul>
+    </div>
+    <div class="panel">
+     <h3>
+      Ce nu face TrustNet
+     </h3>
+     <ul>
+      <li>
+       Nu intermediază contractele
+      </li>
+      <li>
+       Nu verifică obligațiile ori calitatea lucrării
+      </li>
+      <li>
+       Nu stochează documentele contractuale complete
+      </li>
+      <li>
+       Nu decide dacă o opinie subiectivă este „adevărată”
+      </li>
+     </ul>
+    </div>
+   </div>
+   <h2 class="section-marker">
+    Din acord în evaluare
+   </h2>
+   <div class="panel">
+    <div class="flow">
+     <div class="node">
+      <b>
+       Acord recunoscut
+      </b>
+      <small>
+       Participanți + domenii
+      </small>
+     </div>
+     <span class="arr">
+      →
+     </span>
+     <div class="node">
+      <b>
+       Evaluare
+      </b>
+      <small>
+       Rating 1–10 pe caracteristică / competență
+      </small>
+     </div>
+     <span class="arr">
+      →
+     </span>
+     <div class="node">
+      <b>
+       Reputație interogabilă
+      </b>
+      <small>
+       Scor + număr evaluatori + vechime
+      </small>
+     </div>
+    </div>
+    <p class="sub">
+     Nu toate acordurile trebuie evaluate. Evaluările se fac doar între participanți eligibili; o relație dintre doi actori contribuie o singură dată per caracteristică la agregare, chiar dacă au colaborat repetat.
+    </p>
+   </div>
+   <h2 class="section-marker">
+    Principii de evaluare
+   </h2>
+   <div class="panel">
+    <ul>
+     <li>
+      <strong>
+       Caracteristici evaluate:
+      </strong>
+      respectarea angajamentelor, promptitudinea, ușurința comunicării, flexibilitatea și calitatea muncii pentru fiecare competență utilizată.
+     </li>
+     <li>
+      <strong>
+       Ponderi egale între evaluatori:
+      </strong>
+      fiecare actor distinct contribuie cu aceeași pondere la evaluarea unei caracteristici.
+     </li>
+     <li>
+      <strong>
+       Actualitate:
+      </strong>
+      ratingurile își păstrează valoarea; la interogare putem fie include doar evaluările din ultimele X luni, fie reduce gradual influența celor vechi.
+     </li>
+     <li>
+      <strong>
+       Actualizarea ratingului:
+      </strong>
+      o evaluare nouă a aceleiași caracteristici, de către același actor pentru același destinatar, înlocuiește contribuția precedentă; istoricul poate fi păstrat pentru audit.
+     </li>
+     <li>
+      <strong>
+       Prag de relevanță:
+      </strong>
+      un scor este afișat doar dacă provine de la cel puțin X actori evaluatori distincți.
+     </li>
+     <li>
+      <strong>
+       Evaluări atomice și definitive:
+      </strong>
+      fiecare evaluare este o operație indivizibilă și nu poate fi editată de actor după trimitere; doar un administrator poate corecta sau anula evaluări în cazuri de abuz, cu istoric de audit.
+     </li>
+    </ul>
+   </div>
+   <h2 class="section-marker">
+    Simulare: rating și actualitate
+    <span class="formula-note" id="formulaNote">
+     w(t) = 2^(−t/H)
+    </span>
+   </h2>
+   <div class="panel">
+    <p>
+     Comparați două metode: reducerea graduală a influenței evaluărilor vechi sau excluderea celor mai vechi de X luni. Ratingul acordat nu se modifică.
+    </p>
+    <div aria-label="Metodă de relevanță temporală" class="model-tabs" role="radiogroup">
+     <label class="model-tab">
+      <input checked="" class="model-radio" name="model" type="radio" value="half"/>
+      Depreciere continuă
+     </label>
+     <label class="model-tab">
+      <input class="model-radio" name="model" type="radio" value="filter"/>
+      Filtru de vechime
+     </label>
+    </div>
+    <div class="twocol">
+     <div class="control">
+      <label>
+       Rating
+       <strong id="ratingValue">
+        9/10
+       </strong>
+      </label>
+      <input id="rating" max="10" min="1" type="range" value="9"/>
+     </div>
+     <div class="control">
+      <label>
+       Vechime
+       <strong id="ageValue">
+        18 luni
+       </strong>
+      </label>
+      <input id="age" max="60" min="0" type="range" value="18"/>
+     </div>
+    </div>
+    <div class="control">
+     <label>
+      <span id="periodLabel">
+       Perioadă de înjumătățire
+      </span>
+      <strong id="periodValue">
+       12 luni
+      </strong>
+     </label>
+     <input id="period" max="60" min="3" step="3" type="range" value="12"/>
+    </div>
+    <svg aria-label="Grafic actualitate în timp" id="curve" role="img" viewbox="0 0 720 215">
+     <g id="grid">
+     </g>
+     <path fill="none" id="line" stroke="#85baff" stroke-width="3">
+     </path>
+     <line id="marker" stroke="#f4c47b" stroke-dasharray="5 5" y1="15" y2="180">
+     </line>
+     <circle fill="#f4c47b" id="point" r="6">
+     </circle>
+    </svg>
+    <div class="result">
+     <div class="stat">
+      <small>
+       Rating istoric
+      </small>
+      <strong id="outRating">
+       9/10
+      </strong>
+     </div>
+     <div class="stat">
+      <small>
+       Relevanță / includere
+      </small>
+      <strong id="outWeight">
+       35.4%
+      </strong>
+     </div>
+     <div class="stat">
+      <small>
+       Contribuție brută*
+      </small>
+      <strong id="outContribution">
+       3.18
+      </strong>
+     </div>
+    </div>
+    <p class="sub">
+     * Contribuția brută = rating × pondere. Nu este media agregată. De decis: filtru temporal, depreciere continuă sau ambele? Influențează recența sortarea rezultatelor sau se afișează separat?
+    </p>
+   </div>
+   <h2 class="section-marker">
+    Simulare: reputație agregată
+   </h2>
+   <div class="panel">
+    <p>
+     Patru evaluatori distincți ai aceluiași actor, pentru o singură competență. Modificați un rating și observați media.
+    </p>
+    <div class="twocol" id="raters">
+    </div>
+    <div class="result">
+     <div class="stat">
+      <small>
+       Medie simplă
+      </small>
+      <strong id="avg">
+       —
+      </strong>
+     </div>
+     <div class="stat">
+      <small>
+       Evaluatori
+      </small>
+      <strong id="count">
+       4
+      </strong>
+     </div>
+     <div class="stat">
+      <small>
+       Prag minim
+      </small>
+      <strong id="min">
+       3
+      </strong>
+     </div>
+    </div>
+    <div class="control">
+     <label>
+      Minim de evaluatori pentru afișare
+      <strong id="thresholdValue">
+       3
+      </strong>
+     </label>
+     <input id="threshold" max="8" min="1" type="range" value="3"/>
+    </div>
+    <p class="sub" id="aggregateNote">
+    </p>
+    <p class="sub">
+     De decis: medie sau agregare robustă? Ce facem cu evaluările repetate de la aceeași persoană? Cum arătăm „dovezi insuficiente”?
+    </p>
+   </div>
+   <div class="sep">
+   </div>
+   <div class="eyebrow">
+    02 · Proiectare — cum am putea obține comportamentul
+   </div>
+   <h2 class="section-marker idea">
+    Idei arhitecturale inițiale
+   </h2>
+   <div class="panel">
+    <h3>
+     Contextul sistemului
+    </h3>
+    <div class="flow">
+     <div class="node">
+      <b>
+       Platforme partenere
+      </b>
+      <small>
+       Emit atestări de acord prin integrare
+      </small>
+     </div>
+     <span class="arr">
+      ⇄
+     </span>
+     <div class="node">
+      <b>
+       TrustNet
+      </b>
+      <small>
+       Identități · acorduri · evaluări · reputație
+      </small>
+     </div>
+     <span class="arr">
+      ⇄
+     </span>
+     <div class="node">
+      <b>
+       Actori
+      </b>
+      <small>
+       Cont propriu, autentificare, evaluare, căutare
+      </small>
+     </div>
+    </div>
+    <p class="sub">
+     Frontiera sistemului: TrustNet nu controlează platformele și nu primește obligatoriu contractele integrale.
+    </p>
+   </div>
+   <div class="panel">
+    <h3>
+     Componente candidate
+    </h3>
+    <div class="flow">
+     <div class="node">
+      <b>
+       Identitate / acces
+      </b>
+      <small>
+       Conturi + permisiuni
+      </small>
+     </div>
+     <div class="node">
+      <b>
+       Registru acorduri
+      </b>
+      <small>
+       Eligibilitate pentru evaluare
+      </small>
+     </div>
+     <div class="node">
+      <b>
+       Evaluări
+      </b>
+      <small>
+       Unicitate + corecții + audit
+      </small>
+     </div>
+     <div class="node">
+      <b>
+       Reputație
+      </b>
+      <small>
+       Agregare și filtrare
+      </small>
+     </div>
+    </div>
+    <p class="sub">
+     Posibilă implementare: monolit modular cu interfețe clare, plus API pentru parteneri. Separarea în microservicii nu este necesară pentru a modela componentele.
+    </p>
+   </div>
+   <div class="twocol">
+    <div class="panel">
+     <h3>
+      Interfețe candidate
+     </h3>
+     <ul>
+      <li>
+       Înregistrare / confirmare acord
+      </li>
+      <li>
+       Autentificare și asociere cont
+      </li>
+      <li>
+       Trimitere / corectare evaluare
+      </li>
+      <li>
+       Interogare reputație și filtrare
+      </li>
+     </ul>
+    </div>
+    <div class="panel">
+     <h3>
+      Tehnologii posibile
+     </h3>
+     <ul>
+      <li>
+       Backend: Python + FastAPI sau Rust
+      </li>
+      <li>
+       Persistență: PostgreSQL
+      </li>
+      <li>
+       Interoperabilitate: REST + OpenAPI
+      </li>
+      <li>
+       Identitate federată: OpenID Connect
+      </li>
+      <li>
+       Diagrame: C4, UML, secvență și stare
+      </li>
+     </ul>
+     <p class="sub">
+      Acestea sunt exemple de analizat, nu cerințe ale specificației.
+     </p>
+    </div>
+   </div>
+   <h2 class="section-marker idea">
+    Decizii arhitecturale de discutat
+   </h2>
+   <div class="panel" id="decisions">
+   </div>
+  </main>
+  <script>
+   "use strict";
+
+// Referințe către controalele interactive.
+const byId = (id) => document.getElementById(id);
+
+// Întrebări tehnice orientative pentru discuția echipei.
+const architectureDecisions = [
+    {
+        title: "Identitatea și autentificarea actorilor",
+        idea: "Fiecare actor are o identitate TrustNet unică, reutilizabilă pe toate platformele. Soluție tehnică propusă: OAuth 2.0 / OpenID Connect pentru autentificare și asocierea conturilor externe.",
+        question: "Permitem autentificare prin cont propriu, platforme partenere sau ambele? Ce garanții cerem partenerilor pentru verificarea identității și evitarea asocierilor greșite?"
+    },
+    {
+        title: "Istoricul colaborărilor",
+        idea: "Pentru aceeași pereche de actori și aceeași caracteristică, ratingul nou înlocuiește contribuția anterioară. Istoricul acordurilor este separat de ratingul curent.",
+        question: "Cum păstrăm istoricul contractelor dintre doi actori în același domeniu: identificatori sau referințe externe private, numărul total de acorduri ori ambele? Cum detectăm duplicatele?"
+    },
+    {
+        title: "Abuzuri și intervenții administrative",
+        idea: "Opiniile nu sunt arbitrate pentru simplul fapt că sunt negative. Intervențiile administrative sunt rezervate abuzurilor și trebuie înregistrate pentru audit.",
+        question: "În afară de conturi sau contracte fictive, ce constituie abuz? În ce condiții pot fi anulate evaluări, corectate date ori dezactivate conturi?"
+    },
+    {
+        title: "Confidențialitatea datelor",
+        idea: "TrustNet stochează minimul necesar pentru verificarea dreptului de evaluare și calculul reputației; documentele contractuale rămân pe platformele de origine.",
+        question: "Ce date sunt publice și ce date rămân private? Cum proiectăm accesul, păstrarea și rectificarea datelor pentru respectarea GDPR?"
+    },
+    {
+        title: "Publicul-țintă și funcționalitățile",
+        idea: "Serviciul poate rămâne general sau poate fi adaptat inițial unei comunități concrete, de exemplu dezvoltatorilor open-source ori freelancerilor.",
+        question: "Pornim cu un domeniu-țintă sau păstrăm modelul general? Ce funcționalități adăugăm, simplificăm sau eliminăm ca să fie util acelui public?"
+    },
+    {
+        title: "Calculul încrederii și relevanța ratingurilor",
+        idea: "Propunere simplificată: evaluatori cu ponderi egale, rating separat de numărul evaluatorilor distincți și de vechimea evaluărilor. Scorul apare doar după atingerea pragului de relevanță.",
+        question: "Media simplă, mediana sau altă agregare? Filtru după vechime, depreciere continuă ori ambele? Ce prag minim de evaluatori folosim și cum influențează actualitatea afișarea sau căutarea?"
+    }
+];
+
+function renderDecisions() {
+    byId("decisions").innerHTML = architectureDecisions.map((decision, index) => `
+        <div class="decision">
+            <b>${index + 1}. ${decision.title}</b>
+            <small>${decision.idea}</small>
+            <div class="choice mini">De decis: ${decision.question}</div>
+        </div>
+    `).join("");
+}
+
+// Graficul compară filtrul temporal cu deprecierea exponențială.
+// Pentru H luni: w(t) = 2 ^ (-t / H).
+function updateTemporalSimulation() {
+    const rating = Number(byId("rating").value);
+    const age = Number(byId("age").value);
+    const period = Number(byId("period").value);
+    const mode = document.querySelector('input[name="model"]:checked').value;
+    const continuous = mode === "half";
+    const weight = continuous ? Math.pow(2, -age / period) : Number(age <= period);
+
+    byId("ratingValue").textContent = `${rating}/10`;
+    byId("ageValue").textContent = `${age} luni`;
+    byId("periodValue").textContent = `${period} luni`;
+    byId("periodLabel").textContent = continuous ? "Perioadă de înjumătățire" : "Include ultimele";
+    byId("formulaNote").textContent = continuous ? "w(t) = 2^(−t/H)" : "w(t) = 1 dacă t ≤ X; altfel 0";
+    byId("outRating").textContent = `${rating}/10`;
+    byId("outWeight").textContent = `${(100 * weight).toFixed(1)}%`;
+    byId("outContribution").textContent = (rating * weight).toFixed(2);
+
+    const x = (months) => 40 + months * 10.8;
+    const y = (weightValue) => 180 - weightValue * 160;
+    const points = [];
+
+    for (let month = 0; month <= 60; month += 0.25) {
+        const value = continuous ? Math.pow(2, -month / period) : Number(month <= period);
+        points.push(`${month === 0 ? "M" : "L"}${x(month).toFixed(1)} ${y(value).toFixed(1)}`);
+    }
+
+    byId("line").setAttribute("d", points.join(" "));
+    byId("marker").setAttribute("x1", x(age));
+    byId("marker").setAttribute("x2", x(age));
+    byId("point").setAttribute("cx", x(age));
+    byId("point").setAttribute("cy", y(weight));
+}
+
+function drawTemporalGrid() {
+    const horizontal = [0, 0.25, 0.5, 0.75, 1].map((value) => `
+        <line x1="40" x2="688" y1="${180 - value * 160}" y2="${180 - value * 160}"
+              stroke="#53637e" stroke-opacity=".4" stroke-dasharray="3 5" />
+        <text x="32" y="${183 - value * 160}" fill="#b1bfd2"
+              font-size="11" text-anchor="end">${value * 100}%</text>
+    `).join("");
+
+    const months = [0, 12, 24, 36, 48, 60].map((month) => `
+        <text x="${40 + month * 10.8}" y="199" fill="#b1bfd2"
+              font-size="11" text-anchor="middle">${month}</text>
+    `).join("");
+
+    byId("grid").innerHTML = horizontal + months;
+}
+
+// Exemplu simplificat: patru evaluatori, fără ponderi diferențiate.
+const scores = [9, 8, 10, 4];
+
+function renderRaters() {
+    byId("raters").innerHTML = scores.map((rating, index) => `
+        <div class="control">
+            <label for="evaluator${index}">
+                Evaluator ${index + 1}
+                <strong id="sval${index}">${rating}/10</strong>
+            </label>
+            <input id="evaluator${index}" type="range" min="1" max="10"
+                   value="${rating}" data-idx="${index}" />
+        </div>
+    `).join("");
+
+    document.querySelectorAll("[data-idx]").forEach((input) => {
+        input.addEventListener("input", () => {
+            const index = Number(input.dataset.idx);
+            scores[index] = Number(input.value);
+            byId(`sval${index}`).textContent = `${input.value}/10`;
+            updateAggregateSimulation();
+        });
+    });
+}
+
+function updateAggregateSimulation() {
+    const mean = scores.reduce((total, value) => total + value, 0) / scores.length;
+    const threshold = Number(byId("threshold").value);
+    const isRelevant = scores.length >= threshold;
+
+    byId("thresholdValue").textContent = threshold;
+    byId("min").textContent = threshold;
+    byId("avg").textContent = isRelevant ? `${mean.toFixed(2)}/10` : "—";
+    byId("aggregateNote").textContent = isRelevant
+        ? "Scor afișabil: pragul de relevanță este atins."
+        : "Pragul de relevanță nu este atins: scorul nu este afișat.";
+}
+
+renderDecisions();
+drawTemporalGrid();
+renderRaters();
+
+[byId("rating"), byId("age"), byId("period"),
+ ...document.querySelectorAll('input[name="model"]')].forEach((input) => {
+    input.addEventListener("input", updateTemporalSimulation);
+});
+
+byId("threshold").addEventListener("input", updateAggregateSimulation);
+updateTemporalSimulation();
+updateAggregateSimulation();
+  </script>
+ </body>
+</html>
+
