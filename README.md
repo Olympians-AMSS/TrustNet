@@ -54,4 +54,4 @@ TrustNet/
 
 ## Licență
 
-**În curs de alegere de către echipă.** Este propusă [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0): permite utilizarea, modificarea și distribuirea, inclusiv comercială, cu păstrarea notificărilor de drepturi de autor și a condițiilor de atribuire aplicabile. Până la adoptarea licenței și adăugarea fișierului `LICENSE`, publicarea în repository nu echivalează cu acordarea unei licențe open-source.
+**În curs de alegere de către echipă: [link poll](https://github.com/Olympians-AMSS/TrustNet/discussions/13#discussion-11354949).** Este propusă [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0): permite utilizarea, modificarea și distribuirea, inclusiv comercială, cu păstrarea notificărilor de drepturi de autor și a condițiilor de atribuire aplicabile. Până la adoptarea licenței și adăugarea fișierului `LICENSE`, publicarea în repository nu echivalează cu acordarea unei licențe open-source.
