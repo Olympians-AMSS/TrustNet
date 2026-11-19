@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
-"""Genereaza SINTEZA.md din fragmentele marcate in dosar/*.md.
+"""Genereaza SINTEZA.md din fragmentele SINTEZA ale fisierelor dosar/*.md.
 
-Utilizare (din orice director): python3 scripts/generate_sinteza.py
+Formatul oficial este cel din dosar/model_contributie.md:
+    Autor: Nume
+    Discuție: [Titlu](URL)
+    Status: În lucru
+    <!-- SINTEZA:START -->
+    ...
+    <!-- SINTEZA:END -->
+
+Utilizare: python3 scripts/generate_sinteza.py
 Nu necesita pachete externe.
 """
 
@@ -18,7 +26,7 @@ OUTPUT = ROOT / "SINTEZA.md"
 START = "<!-- SINTEZA:START -->"
 END = "<!-- SINTEZA:END -->"
 
-# Ordinea dosarului este stabila, indiferent de ordinea fisierelor din Git.
+# Ordine fixa pentru principalele contributii; restul, alfabetic.
 ORDER = [
     "specificatii.md",
     "modelare-domeniu.md",
@@ -27,13 +35,19 @@ ORDER = [
     "validare-arhitectura.md",
 ]
 
-# Sabloanele nu reprezinta contributii.
-SKIP = {"SABLON_CONTRIBUTIE.md", "sablon_contributie.md", "template.md"}
+# Aceste fisiere sunt modele, nu contributii.
+SKIP = {
+    "model_contributie.md",
+    "SABLON_CONTRIBUTIE.md",
+    "sablon_contributie.md",
+    "template.md",
+}
 
 
 def get_metadata(source: str, label: str) -> str | None:
-    match = re.search(rf"^\*\*{re.escape(label)}:\*\*\s*(.+?)\s*$", source, re.M | re.I)
-    return match.group(1).strip() if match else None
+    """Citeste liniile simple 'Autor:', 'Discuție:' si 'Status:' din model."""
+    match = re.search(rf"^{re.escape(label)}:\s*(.*?)\s*$", source, flags=re.M | re.I)
+    return match.group(1).strip() if match and match.group(1).strip() else None
 
 
 def get_title(source: str, fallback: str) -> str:
@@ -78,7 +92,7 @@ def make_summary() -> str:
         ]
         return "\n".join(sections)
 
-    # Citim si validam TOATE contributiile inainte de a suprascrie sinteza.
+    # Verificam toate contributiile inainte de a scrie rezultatul.
     entries = []
     for path in files:
         raw = path.read_text(encoding="utf-8")
