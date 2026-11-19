@@ -6,22 +6,13 @@
 ## Cuprins
 
 1. [Specificații TrustNet](dosar/specificatii.md)
-2. [Titlul contribuției](dosar/model_contributie.md)
 
 ## 1. Specificații TrustNet
 
-**Autor:** Nespecificat  
+**Autor:** Condruz Filip - Gabriel  
+**Status:** În lucru  
+**Discuție:** [Link Specificatie Discussion](https://github.com/Olympians-AMSS/TrustNet/discussions/2#discussion-11313358)  
 **Contribuție completă:** [Deschide documentul](dosar/specificatii.md)
-
-## Titlul secțiunii din sinteză
-
-Concluziile esențiale care vor fi
-preluate automat în SINTEZA.md.
-
-## 2. Titlul contribuției
-
-**Autor:** Nespecificat  
-**Contribuție completă:** [Deschide documentul](dosar/model_contributie.md)
 
 ## Titlul secțiunii din sinteză
 
