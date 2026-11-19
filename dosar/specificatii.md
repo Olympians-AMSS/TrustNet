@@ -1,4 +1,4 @@
-# Specificații TrustNext
+# Specificații TrustNet
 
 Autor: Condruz Filip - Gabriel
 Discuție: [Link Specificatie Discussion](https://github.com/Olympians-AMSS/TrustNet/discussions/2#discussion-11313358)
