@@ -5,10 +5,10 @@
 
 ## Cuprins
 
-1. [Specificații TrustNext](dosar/specificatii.md)
+1. [Specificații TrustNet](dosar/specificatii.md)
 2. [Titlul contribuției](dosar/model_contributie.md)
 
-## 1. Specificații TrustNext
+## 1. Specificații TrustNet
 
 **Autor:** Nespecificat  
 **Contribuție completă:** [Deschide documentul](dosar/specificatii.md)
