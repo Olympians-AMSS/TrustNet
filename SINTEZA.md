@@ -9,7 +9,9 @@
 
 ## 1. Specificații TrustNet
 
-**Autor:** Nespecificat  
+**Autor:** Condruz Filip - Gabriel  
+**Status:** În lucru — propunere pentru echipă  
+**Discuție:** [Specificatie — GitHub Discussions #2](https://github.com/Olympians-AMSS/TrustNet/discussions/2)  
 **Contribuție completă:** [Deschide documentul](dosar/specificatii.md)
 
 ## Specificații — TrustNet
